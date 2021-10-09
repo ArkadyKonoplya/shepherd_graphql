@@ -1,0 +1,2 @@
+Verify Your Email
+Please click http://{{ domain }}/accounts/activate/{{ uid }}/{{ token }} to verify your email!  Welcome to Shepherd Farming!

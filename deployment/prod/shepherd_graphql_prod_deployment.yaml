@@ -1,0 +1,55 @@
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "shepherd-graphql-prod"
+  namespace: "shepherd-graphql"
+  labels:
+    app: "shepherd-graphql"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "shepherd-graphql"
+  template:
+    metadata:
+      labels:
+        app: "shepherd-graphql"
+    spec:
+      containers:
+        - name: "shepherd-graphql"
+          image: <image-url>
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: shepherd-graphql
+  name: shepherd-graphql-service
+spec:
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: shepherd-graphql
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  namespace: shepherd-graphql
+  name: ingress-shepherd-graphql
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: shepherd-graphql-service
+              servicePort: 8000

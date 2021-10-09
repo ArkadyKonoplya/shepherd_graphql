@@ -1,0 +1,23 @@
+export AWS_PROFILE=<profile-name>
+eksctl create cluster --name shepherd-graphql-prod --version 1.21 --fargate
+aws eks update-kubeconfig --region us-east-1 --name shepherd-graphql-prod
+eksctl utils associate-iam-oidc-provider --cluster shepherd-graphql-prod --approve
+aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json ||| only needed if not already created.
+eksctl create iamserviceaccount --cluster=shepherd-graphql-prod --namespace=kube-system --name=aws-load-balancer-controller --attach-policy-arn=arn:aws:iam::<account_id>:policy/AWSLoadBalancerControllerIAMPolicy --override-existing-serviceaccounts --approve
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.1.1/cert-manager.yaml
+eksctl create fargateprofile --cluster shepherd-graphql-prod --region us-east-1 --name shepherd-graphql --namespace shepherd-graphql
+helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller --set clusterName=shepherd-graphql-prod --set serviceAccount.create=false --set region=us-east-1 --set vpcId=<vpc-id> --set serviceAccount.name=aws-load-balancer-controller -n kube-system
+kubectl apply -f shepherd_graphql_prod_namespace.yaml 
+kubectl apply -f shepherd_graphql_prod_service.yaml 
+kubectl apply -f shepherd_graphql_prod_deployment.yaml
+	
+	
+	
+Handy Things
+
+kubectl get pods -n <cluster-name> - get all pods in cluster
+kubectl describe pod <pod-name> -n <cluster-name> - gets main details of pod in cluster
+kubectl logs <pod-name> -n <cluster-name> - gets last ten lines of logs of pod in cluster
+kubectl exec -it <pod-name> -n <cluster-name> -- /bin/bash - gets you a bash terminal on pod in cluster
+
+Also, must include inbound rule on RDS instance otherwise will not connect.

@@ -1,0 +1,40 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+Django = "*"
+graphene = "*"
+graphene-django = "==2.15.0"
+psycopg2-binary = "*"
+graphene-django-optimizer = "*"
+gunicorn = "*"
+django-ses = "*"
+django-graphql-jwt = "==0.3.0"
+django-extensions = "*"
+django-timezone-field = "*"
+bootstrap4 = "*"
+crispy-bootstrap5 = "*"
+django-bootstrap4 = "*"
+django-bootstrap5 = "*"
+graphene-gis = "*"
+pytz = "*"
+darksky_weather = "*"
+PyJWT = "==1.7.1"
+dj-stripe = "*"
+martor = "*"
+Pillow = "*"
+fcm-django = "==0.3.11"
+
+[dev-packages]
+django-debug-toolbar = "*"
+snapshottest = "*"
+coverage = "*"
+pytest = "*"
+model-bakery = "*"
+mixer = "*"
+black = "==21.5b1"
+
+[requires]
+python_version = "3.9"

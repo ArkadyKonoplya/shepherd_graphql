@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "shepherd-graphql-service"
+  namespace: "shepherd-graphql"
+  labels:
+    app: shepherd-graphql
+spec:
+  selector:
+    app: shepherd-graphql
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: NodePort
